@@ -1,0 +1,17 @@
+.my-message {
+    color: white;
+    background-color: blue;
+    text-align: right;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.their-message {
+    color: black;
+    background-color: lightgrey;
+    text-align: left;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+}
