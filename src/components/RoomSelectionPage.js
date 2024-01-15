@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const MainPage = () => {
+const RoomSelectionPage = () => {
     const navigate = useNavigate();
     const [nickname, setNickname] = useState('');
     const [selectedRoom, setSelectedRoom] = useState('');
@@ -18,7 +18,7 @@ const MainPage = () => {
         <Wrapper>
             <Form onSubmit={handleSubmit}>
                 <Label>
-                    닉네임 :
+                    Enter your nickname:
                     <Input
                         type="text"
                         value={nickname}
@@ -28,9 +28,9 @@ const MainPage = () => {
                 <Label>
                     Choose a room:
                     <Select onChange={e => setSelectedRoom(e.target.value)}>
-                        <option value="">방을 선택</option>
-                        <option value="Room1">1번방</option>
-                        <option value="Room2">2번방</option>
+                        <option value="">Select a room</option>
+                        <option value="Room1">Room 1</option>
+                        <option value="Room2">Room 2</option>
                         {/* Add more rooms as needed */}
                     </Select>
                 </Label>
@@ -42,7 +42,7 @@ const MainPage = () => {
     );
 };
 
-export default MainPage;
+export default RoomSelectionPage;
 
 const Wrapper = styled.div`
     display: flex;

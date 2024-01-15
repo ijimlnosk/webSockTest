@@ -10,7 +10,8 @@ const socket = io('http://49.165.177.17:3000');
 
 const Chat = () => {
     const location = useLocation();
-    const { name } = location.state || {};
+    const { roomName, name } = location.state || {};
+
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
 
@@ -25,6 +26,11 @@ const Chat = () => {
     }, [chat]);
 
     useEffect(() => {
+        if (roomName) {
+            socket.emit('join room', roomName);
+            console.log(roomName);
+        }
+
         const messageHandler = msg => {
             setChat(prev => [...prev, msg]);
         };
@@ -33,15 +39,18 @@ const Chat = () => {
 
         return () => {
             socket.off('chat message', messageHandler);
+            if (roomName) {
+                socket.emit('leave room', roomName);
+            }
         };
-    }, []);
+    }, [roomName]);
 
     const sendMessage = e => {
         e.preventDefault();
-        const newMessage = { user: name, text: message };
+        const newMessage = { roomName: roomName, user: name, text: message };
         socket.emit('chat message', newMessage);
         setMessage('');
-        // setChat(prev => [...prev, newMessage]);
+        setChat(prev => [...prev, newMessage]);
     };
 
     return (
@@ -82,12 +91,25 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    @media (max-width: 500px) {
+        width: 300px;
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 `;
 
 const Container = styled.div`
     width: 600px;
     height: 500px;
     overflow: auto;
+    @media (max-width: 500px) {
+        width: 250px;
+        height: 400px;
+        overflow: auto;
+    }
 `;
 
 const Ul = styled.ul`
@@ -98,9 +120,13 @@ const Ul = styled.ul`
 
 const Li = styled.li`
     display: flex;
-    justify-content: ${props => (props.isUserMessage ? 'end' : 'start')};
+    flex-direction: column;
+    align-items: ${props => (props.isUserMessage ? 'flex-end' : 'flex-start')};
     margin: 0 30px;
     margin-bottom: 5px;
+    @media (max-width: 500px) {
+        margin: 0 10px;
+    }
 `;
 
 const MessageText = styled.span`
@@ -110,12 +136,20 @@ const MessageText = styled.span`
     margin-left: 5px;
     max-width: 80%;
     word-wrap: break-word;
+
+    @media (max-width: 500px) {
+        max-width: 80%;
+    }
 `;
 
 const Input = styled.input`
     width: 500px;
     height: 80px;
     padding-left: 10px;
+    @media (max-width: 500px) {
+        width: 200px;
+        height: 30px;
+    }
 `;
 
 const Button = styled.button`
